@@ -7,6 +7,7 @@
 
 #include "Annyduino.h"
 #include <Arduino.h>
+#include <aJSON.h>
 
 Annyduino::Annyduino() {
 	this->p = 0;
@@ -40,3 +41,20 @@ Annyduino::~Annyduino() {
 
 }
 
+Annyduino::recebeRequisicao(*jsonString){
+    
+    char* v1, v2, v3;
+    	
+    aJsonObject* jsonObj = aJson.parse(jsonString);
+
+    if (jsonObj != NULL) {    
+        aJsonObject* v1 = aJson.getObjectItem(jsonObj, "p"); 
+        this->p = v1 ->valuestring;
+        
+        aJsonObject* v2 = aJson.getObjectItem(jsonObj, "i"); 
+        this->i = v2 ->valuestring;
+        
+        aJsonObject* v3 = aJson.getObjectItem(jsonObj, "s"); 
+        this->s = v3 ->valuestring;
+    }	
+}
