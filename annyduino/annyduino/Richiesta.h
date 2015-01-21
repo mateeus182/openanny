@@ -10,18 +10,24 @@
 #define ANNYDUINO_RICHIESTA_H_
 
 class Richiesta {
-private:
-	unsigned int id;
-	unsigned int pin;
-	unsigned int act;
-	unsigned int inf;
+
+
 
 public:
+	unsigned long id;
+	bool io;
+	unsigned char pin;
+	bool act;
+	int inf;
+
 	Richiesta();
-	Richiesta(unsigned int id,
-				unsigned int pin,
-				unsigned int act,
-				unsigned int inf);
+
+	Richiesta(
+			unsigned long id,
+			bool io,
+			unsigned char pin,
+			bool act,
+			int inf);
 	virtual ~Richiesta();
 };
 

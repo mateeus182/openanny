@@ -6,55 +6,115 @@
  */
 
 #include "Annyduino.h"
-#include <Arduino.h>
-#include <aJSON.h>
 
-Annyduino::Annyduino() {
-	this->p = 0;
-	this->i = 0;
-	this->s = false;
 
-}
+Annyduino::Annyduino() { }
 
-bool Annyduino::liga(){
-	digitalWrite(this->p, HIGH);
-	if(isLigado())
-		return 1;
-	return 0;
+String json;
+Richiesta requisicao;
+Risposta resposta;
+
+
+void Annyduino::setup(){
+
+	//11500
+	Serial.begin(9600);
 
 }
 
-bool Annyduino::desliga(){
-	digitalWrite(this->p, LOW);
-	if(!isLigado())
-		return 1;
-	return 0;
+
+void Annyduino::loop(){
+	recebeRequisicao();
+	converteRequisicao();
+	executaAcao();
+	criaResposta();
+	enviaResposta();
 }
 
 
- unsigned int Annyduino::portasDisponiveis(){
+void Annyduino::recebeRequisicao(){
 
-	return 0;
+	while(Serial.available() > 0)
+		json = Serial.readString();
+
+	/*TODO Até o momento, ficou decidido que não será
+	 * realizada qualquer tipo de validação de integridade
+	 * com o json oriundo da requisição. Presume-se que t0do
+	 * arquivo enviado pelo annyberry estará "correto" */
 }
 
-Annyduino::~Annyduino() {
+void Annyduino::converteRequisicao(){
+
+	if(json.length() > 0){
+		//Falta recuperar a STRING "JSON"
+		aJsonObject* jsonObj;
+
+		if (jsonObj != NULL) {
+
+			aJsonObject* v1 = aJson.getObjectItem(jsonObj, "id");
+			aJsonObject* v2 = aJson.getObjectItem(jsonObj, "io");
+			aJsonObject* v3 = aJson.getObjectItem(jsonObj, "pin");
+			aJsonObject* v4 = aJson.getObjectItem(jsonObj, "act");
+			aJsonObject* v5 = aJson.getObjectItem(jsonObj, "inf");
+
+			requisicao = Richiesta(
+					v1->valueint,
+					v2->valuebool,
+					v3->valuebool,
+					v4->valuebool,
+					v5->valueint);
+		}
+	}
+}
+
+void Annyduino::executaAcao(){
+
+	pinMode(requisicao.pin, requisicao.io);
+
+	//Escrita Digital
+	if(requisicao.io && requisicao.inf == NULL){
+
+		digitalWrite(requisicao.pin, requisicao.act);
+
+		if(digitalRead(requisicao.pin) != requisicao.act)
+			return;
+
+	}
+
+	//Escrita Analógica
+	else if(requisicao.io && requisicao.inf != NULL){
+
+		analogWrite(requisicao.pin, requisicao.inf);
+
+		if(analogRead(requisicao.pin != requisicao.inf)){
+				//PAREI AQUI !!!
+		}
+
+
+
+	}
+	//Leitura Digital
+	else if(!requisicao.io && requisicao.inf == NULL){
+
+		bool rs = digitalRead(requisicao.pin);
+
+	}
+	//Leitura Analogica
+	else {
+
+		int rs = analogRead(requisicao.pin);
+	}
+
 
 }
 
-Annyduino::recebeRequisicao(*jsonString){
-    
-    char* v1, v2, v3;
-    	
-    aJsonObject* jsonObj = aJson.parse(jsonString);
 
-    if (jsonObj != NULL) {    
-        aJsonObject* v1 = aJson.getObjectItem(jsonObj, "p"); 
-        this->p = v1 ->valuestring;
-        
-        aJsonObject* v2 = aJson.getObjectItem(jsonObj, "i"); 
-        this->i = v2 ->valuestring;
-        
-        aJsonObject* v3 = aJson.getObjectItem(jsonObj, "s"); 
-        this->s = v3 ->valuestring;
-    }	
+void Annyduino::criaResposta(){  }
+
+
+void Annyduino::enviaResposta(){
+	json = "";
 }
+
+Annyduino::~Annyduino() { }
+

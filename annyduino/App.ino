@@ -1,13 +1,15 @@
 #include "App.h"
 #include "annyduino/Annyduino.h"
-#include "bombarduino/Bombarduino.h"
 
+Annyduino ad;
 
 void setup() {
-
-
+	ad.setup();
 }
 
-void loop()
-{
+void loop() {
+	ad.loop();
 }
+
+
+

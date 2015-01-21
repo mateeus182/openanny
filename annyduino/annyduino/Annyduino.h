@@ -8,35 +8,27 @@
 #ifndef ANNYDUINO_ANNYDUINO_H_
 #define ANNYDUINO_ANNYDUINO_H_
 
+#include <Arduino.h>
+#include <aJSON.h>
+#include "Richiesta.h"
+#include "Risposta.h"
+
 class Annyduino {
 
 public:
 	Annyduino();
 	void setup();
-	void resetup();
 	void loop();
 
-	bool liga();
-	bool desliga();
-	bool ajusteAnalogico();
-	bool ajustePWM();
-
-	bool isLigado();
-	unsigned int valorAnalogico();
-	unsigned int valorPWM();
-
-	void enviaResposta();
+	void aguardaRequisicao();
 	void recebeRequisicao();
-
-	static unsigned int portasDisponiveis();
+	void converteRequisicao();
+	void executaAcao();
+	void criaResposta();
+	void enviaResposta();
 
 	virtual ~Annyduino();
 
-private:
-
-	int p;
-	int i;
-	int s;
 };
 
 #endif /* ANNYDUINO_ANNYDUINO_H_ */
