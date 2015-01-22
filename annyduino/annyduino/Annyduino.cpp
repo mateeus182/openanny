@@ -37,10 +37,10 @@ void Annyduino::recebeRequisicao(){
 	while(Serial.available() > 0)
 		json = Serial.readString();
 
-	/*TODO AtÈ o momento, ficou decidido que n„o ser·
-	 * realizada qualquer tipo de validaÁ„o de integridade
-	 * com o json oriundo da requisiÁ„o. Presume-se que t0do
-	 * arquivo enviado pelo annyberry estar· "correto" */
+	/*TODO At√© o momento, ficou decidido que n√£o ser√°
+	 * realizada qualquer tipo de valida√ß√£o de integridade
+	 * com o json oriundo da requisi√ß√£o. Presume-se que t0do
+	 * arquivo enviado pelo annyberry estar√° "correto" */
 }
 
 void Annyduino::converteRequisicao(){
@@ -81,7 +81,7 @@ void Annyduino::executaAcao(){
 
 	}
 
-	//Escrita AnalÛgica
+	//Escrita Anal√≥gica
 	else if(requisicao.io && requisicao.inf != NULL){
 
 		analogWrite(requisicao.pin, requisicao.inf);
@@ -109,7 +109,21 @@ void Annyduino::executaAcao(){
 }
 
 
-void Annyduino::criaResposta(){  }
+void Annyduino::criaResposta(){ 
+	
+  aJsonObject *json = aJson.createObject();
+  aJsonObject *id = aJson.createItem(v1);
+  aJson.addItemToObject(json, "id", id);
+  aJsonObject *io = aJson.createItem(v2);
+  aJson.addItemToObject(json, "io", io);
+  aJsonObject *pin = aJson.createItem(v3);
+  aJson.addItemToObject(json, "pin", pin);  
+  aJsonObject *act = aJson.createItem(act);
+  aJson.addItemToObject(json, "act", id);  
+  aJsonObject *inf = aJson.createItem(inf);
+  aJson.addItemToObject(json, "inf", id);  
+	
+}
 
 
 void Annyduino::enviaResposta(){
