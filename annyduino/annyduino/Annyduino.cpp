@@ -46,7 +46,7 @@ void Annyduino::recebeRequisicao(){
 void Annyduino::converteRequisicao(){
 
 	if(json.length() > 0){
-		//Falta recuperar a STRING "JSON"
+		//Falta recuperar a STRING "JSO b'N"
 		aJsonObject* jsonObj;
 
 		if (jsonObj != NULL) {
