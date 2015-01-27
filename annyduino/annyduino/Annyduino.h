@@ -9,7 +9,7 @@
 #define ANNYDUINO_ANNYDUINO_H_
 
 #include <Arduino.h>
-#include <aJSON.h>
+#include <ArduinoJson.h>
 #include "Richiesta.h"
 #include "Risposta.h"
 

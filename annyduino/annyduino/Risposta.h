@@ -8,15 +8,23 @@
 #ifndef ANNYDUINO_RISPOSTA_H_
 #define ANNYDUINO_RISPOSTA_H_
 
+
 class Risposta {
 private:
 	unsigned int id;
 	bool stts;
-	char* obs[ ];
+
 public:
 	Risposta();
 	Risposta(unsigned int id);
 	virtual ~Risposta();
+
+	unsigned int getId() const { return id;	}
+
+	bool isStts() const { return stts; }
+	void setStts(bool stts) { this->stts = stts; }
+
+
 };
 
 #endif /* ANNYDUINO_RISPOSTA_H_ */

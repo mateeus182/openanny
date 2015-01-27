@@ -8,12 +8,12 @@
 #include "Richiesta.h"
 
 
-Richiesta::Richiesta() {
-	this->act = false;
-	this->io = false;
-	this->inf = 0;
+Richiesta::Richiesta(){
 	this->id = 0;
 	this->pin = 0;
+	this->io = false;
+	this->inf = 0;
+	this->act = false;
 }
 
 Richiesta::Richiesta(unsigned long id, bool io, unsigned char pin, bool act, int inf){

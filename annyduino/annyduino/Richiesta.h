@@ -11,24 +11,26 @@
 
 class Richiesta {
 
-
-
-public:
+private:
 	unsigned long id;
 	bool io;
 	unsigned char pin;
 	bool act;
 	int inf;
 
-	Richiesta();
+public:
 
-	Richiesta(
-			unsigned long id,
-			bool io,
-			unsigned char pin,
-			bool act,
-			int inf);
+	Richiesta();
+	Richiesta(unsigned long id, bool io, unsigned char pin, bool act, int inf);
 	virtual ~Richiesta();
+
+	bool isAct() const { return act; }
+	unsigned long getId() const { return id; }
+	int getInf() const { return inf; }
+	bool isIo() const {	return io; }
+	unsigned char getPin() const { return pin; }
+
+
 };
 
 #endif /* ANNYDUINO_RICHIESTA_H_ */

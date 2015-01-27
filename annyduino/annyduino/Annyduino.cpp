@@ -22,7 +22,6 @@ void Annyduino::setup(){
 
 }
 
-
 void Annyduino::loop(){
 	recebeRequisicao();
 	converteRequisicao();
@@ -33,76 +32,63 @@ void Annyduino::loop(){
 
 
 void Annyduino::recebeRequisicao(){
-
 	while(Serial.available() > 0)
 		json = Serial.readString();
-
-	/*TODO Até o momento, ficou decidido que não será
-	 * realizada qualquer tipo de validação de integridade
-	 * com o json oriundo da requisição. Presume-se que t0do
-	 * arquivo enviado pelo annyberry estará "correto" */
 }
 
 void Annyduino::converteRequisicao(){
 
 	if(json.length() > 0){
-		//Falta recuperar a STRING "JSO b'N"
-		aJsonObject* jsonObj;
 
-		if (jsonObj != NULL) {
+		StaticJsonBuffer<200> jsonBuffer;
 
-			aJsonObject* v1 = aJson.getObjectItem(jsonObj, "id");
-			aJsonObject* v2 = aJson.getObjectItem(jsonObj, "io");
-			aJsonObject* v3 = aJson.getObjectItem(jsonObj, "pin");
-			aJsonObject* v4 = aJson.getObjectItem(jsonObj, "act");
-			aJsonObject* v5 = aJson.getObjectItem(jsonObj, "inf");
+		unsigned int tamanhoJSON = json.length()+1;
+		char kjson[tamanhoJSON];
+		json.toCharArray(kjson, tamanhoJSON);
 
-			requisicao = Richiesta(
-					v1->valueint,
-					v2->valuebool,
-					v3->valuebool,
-					v4->valuebool,
-					v5->valueint);
-		}
+		JsonObject& root = jsonBuffer.parseObject(kjson);
+
+		requisicao = Richiesta(root["id"], root["io"], root["pin"],	root["act"], root["inf"]);
 	}
+
 }
 
 void Annyduino::executaAcao(){
 
-	pinMode(requisicao.pin, requisicao.io);
+	pinMode(requisicao.getPin(), requisicao.isIo());
 
 	//Escrita Digital
-	if(requisicao.io && requisicao.inf == NULL){
+	if(requisicao.isIo() && requisicao.getInf() == NULL){
 
-		digitalWrite(requisicao.pin, requisicao.act);
+		digitalWrite(requisicao.getPin(), requisicao.isAct());
 
-		if(digitalRead(requisicao.pin) != requisicao.act)
+		if(digitalRead(requisicao.getPin()) != requisicao.isAct())
 			return;
 
 	}
 
-	//Escrita Analógica
-	else if(requisicao.io && requisicao.inf != NULL){
+	//Escrita Anal�gica
+	else if(requisicao.isIo() && requisicao.getInf() != NULL){
 
-		analogWrite(requisicao.pin, requisicao.inf);
+		analogWrite(requisicao.getPin(), requisicao.getInf());
 
-		if(analogRead(requisicao.pin != requisicao.inf)){
-				//PAREI AQUI !!!
+		if(analogRead(requisicao.getPin() != requisicao.getInf())){
+			//PAREI AQUI !!!
 		}
 
 
 
 	}
 	//Leitura Digital
-	else if(!requisicao.io && requisicao.inf == NULL){
+	else if(!requisicao.isIo() && requisicao.getInf() == NULL){
 
-		bool rs = digitalRead(requisicao.pin);
+		bool rs = digitalRead(requisicao.getPin());
 
 	}
-	//Leitura Analogica
+	//Leitura Anal�gica
 	else {
 
-		int rs = analogRead(requisicao.pin);
+		int rs = analogRead(requisicao.getPin());
 	}
 
 
@@ -110,23 +96,26 @@ void Annyduino::executaAcao(){
 
 
 void Annyduino::criaResposta(){ 
-	
-  aJsonObject *json = aJson.createObject();
-  aJsonObject *id = aJson.createItem(v1);
-  aJson.addItemToObject(json, "id", id);
-  aJsonObject *io = aJson.createItem(v2);
-  aJson.addItemToObject(json, "io", io);
-  aJsonObject *pin = aJson.createItem(v3);
-  aJson.addItemToObject(json, "pin", pin);  
-  aJsonObject *act = aJson.createItem(act);
-  aJson.addItemToObject(json, "act", id);  
-  aJsonObject *inf = aJson.createItem(inf);
-  aJson.addItemToObject(json, "inf", id);  
-	
+
+	resposta = Risposta(requisicao.getId());
+	resposta.setStts(true);
+
 }
 
-
 void Annyduino::enviaResposta(){
+
+	StaticJsonBuffer<200> jsonBuffer;
+
+	
+	JsonObject& root = jsonBuffer.createObject();
+
+
+	root["id"] = resposta.getId();
+	root["status"] = resposta.isStts();
+
+
+	root.printTo(serial);
+
 	json = "";
 }
 
