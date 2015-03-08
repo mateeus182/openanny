@@ -32,8 +32,12 @@ void Annyduino::loop(){
 
 
 void Annyduino::recebeRequisicao(){
-	while(Serial.available() > 0)
+	while (!Serial.available());
+	json = "";
+	while(Serial.available())
+	{
 		json = Serial.readString();
+	}
 }
 
 void Annyduino::converteRequisicao(){
