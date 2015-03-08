@@ -67,7 +67,7 @@ void Annyduino::executaAcao(){
 
 	}
 
-	//Escrita Analógica
+	//Escrita AnalÃ³gica
 	else if(requisicao.isIo() && requisicao.getInf() != NULL){
 
 		analogWrite(requisicao.getPin(), requisicao.getInf());
@@ -85,7 +85,7 @@ void Annyduino::executaAcao(){
 		bool rs = digitalRead(requisicao.getPin());
 
 	}
-	//Leitura Analógica
+	//Leitura AnalÃ³gica
 	else {
 
 		int rs = analogRead(requisicao.getPin());
@@ -114,7 +114,7 @@ void Annyduino::enviaResposta(){
 	root["status"] = resposta.isStts();
 
 
-	root.printTo(serial);
+	root.printTo(Serial);
 
 	json = "";
 }
